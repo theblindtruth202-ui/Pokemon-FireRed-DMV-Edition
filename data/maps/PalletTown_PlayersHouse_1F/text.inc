@@ -1,25 +1,24 @@
 PalletTown_PlayersHouse_1F_Text_AllBoysLeaveOakLookingForYou::
-    .string "MOM: …Right.\n"
-    .string "All boys leave home someday.\l"
-    .string "It said so on TV.\p"
-    .string "Oh, yes. PROF. OAK, next door, was\n"
-    .string "looking for you.$"
+    .string "MOM: Ready for today?\p"
+    .string "ANACOSTIA is where you start.\n"
+    .string "But the whole DMV is waiting!\p"
+    .string "PROF. OAK is looking for you.\n"
+    .string "DJ's headed over there, too!$"
 
 PalletTown_PlayersHouse_1F_Text_AllGirlsLeaveOakLookingForYou::
-    .string "MOM: …Right.\n"
-    .string "All girls dream of traveling.\l"
-    .string "It said so on TV.\p"
-    .string "Oh, yes. PROF. OAK, next door, was\n"
-    .string "looking for you.$"
+    .string "MOM: Ready for today?\p"
+    .string "ANACOSTIA is where you start.\n"
+    .string "But the whole DMV is waiting!\p"
+    .string "PROF. OAK is looking for you.\n"
+    .string "DJ's headed over there, too!$"
 
 PalletTown_PlayersHouse_1F_Text_YouShouldTakeQuickRest::
     .string "MOM: {PLAYER}!\n"
-    .string "You should take a quick rest.$"
+    .string "Rest up before you head out.$"
 
 PalletTown_PlayersHouse_1F_Text_LookingGreatTakeCare::
-    .string "MOM: Oh, good! You and your\n"
-    .string "POKéMON are looking great.\l"
-    .string "Take care now!$"
+    .string "MOM: Your team looks great!\n"
+    .string "Take care out in the DMV.$"
 
 PalletTown_PlayersHouse_1F_Text_MovieOnTVFourBoysOnRailroad::
     .string "There's a movie on TV.\n"

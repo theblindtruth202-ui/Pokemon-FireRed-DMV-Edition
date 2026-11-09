@@ -1,7 +1,7 @@
 PalletTown_PlayersHouse_2F_Text_PlayedWithNES::
-    .string "{PLAYER} played with the NES.\p"
-    .string "…Okay!\n"
-    .string "It's time to go!$"
+    .string "{PLAYER} checked the game\n"
+    .string "system in the bedroom.\p"
+    .string "Time to explore ANACOSTIA!$"
 
 PalletTown_PlayersHouse_2F_Text_PressLRForHelp::
     .string "It's a posted notice…\p"

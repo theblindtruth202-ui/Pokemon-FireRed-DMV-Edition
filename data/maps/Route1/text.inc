@@ -1,28 +1,24 @@
 Route1_Text_WorkAtPokeMartTakeSample::
-    .string "Hi!\n"
-    .string "I work at a POKéMON MART.\p"
-    .string "It's part of a convenient chain\n"
-    .string "selling all sorts of items.\p"
-    .string "Please, visit us in VIRIDIAN CITY.\p"
-    .string "I know, I'll give you a sample.\n"
-    .string "Here you go!$"
+    .string "Hey! I work at ALABAMA\n"
+    .string "CONVENIENCE in CONGRESS HTS.\p"
+    .string "We have supplies for folks\n"
+    .string "traveling across the DMV.\p"
+    .string "Here's a sample for you!$"
 
 Route1_Text_ComeSeeUsIfYouNeedPokeBalls::
-    .string "Please come see us if you need\n"
-    .string "POKé BALLS for catching POKéMON.$"
+    .string "Need POKé BALLS or POTIONS?\n"
+    .string "Come visit our corner store!$"
 
 Route1_Text_PutPotionAway::
     .string "{PLAYER} put the POTION away in\n"
     .string "the BAG's ITEMS POCKET.$"
 
 Route1_Text_CanJumpFromLedges::
-    .string "See those ledges along the road?\p"
-    .string "It's a bit scary, but you can jump\n"
-    .string "from them.\p"
-    .string "You can get back to PALLET TOWN\n"
-    .string "quicker that way.$"
+    .string "See those ledges by the road?\p"
+    .string "Hop down to take a shortcut\n"
+    .string "back to ANACOSTIA.$"
 
 Route1_Text_RouteSign::
     .string "ROUTE 1\n"
-    .string "PALLET TOWN - VIRIDIAN CITY$"
+    .string "ANACOSTIA - CONGRESS HTS.$"
 
