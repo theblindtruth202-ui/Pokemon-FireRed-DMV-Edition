@@ -167,7 +167,7 @@ def patch_regions(src: str) -> str:
     for section,(old,new) in CITY_NAMES.items():
         pattern = '("id": "'+ section +'",\n      "name": "'+old+'")'
         replacement = '"id": "'+section+'",\n      "name": "'+new+'"'
-        src = replace_exact(src, pattern, replacement, f'Rename {section}')
+        src = replace_exact(src, pattern[1:-1], replacement, f'Rename {section}')
     return src
 
 PATCHES = {

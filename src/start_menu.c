@@ -113,16 +113,28 @@ static void PrintSaveStats(void);
 static void CloseSaveStatsWindow(void);
 static void CloseStartMenu(void);
 
+// DMV Edition: early phone home-screen labels, wired to the ORIGINAL actions.
+// A graphic app-icon grid is planned for a later separately tested art/UI pass.
+static const u8 sDMVAppDex[]      = _("DEX APP");
+static const u8 sDMVAppTeam[]     = _("MY TEAM");
+static const u8 sDMVAppBag[]      = _("BAG");
+static const u8 sDMVAppTrainer[]  = _("PROFILE");
+static const u8 sDMVAppSave[]     = _("SAVE");
+static const u8 sDMVAppSettings[] = _("SETTINGS");
+static const u8 sDMVAppClose[]    = _("CLOSE");
+static const u8 sDMVAppRetire[]   = _("RETIRE");
+static const u8 sDMVPhoneHeader[] = _("TBT PHONE");
+
 static const struct MenuAction sStartMenuActionTable[] = {
-    [STARTMENU_POKEDEX] = { gText_MenuPokedex, {.u8_void = StartMenuPokedexCallback} },
-    [STARTMENU_POKEMON] = { gText_MenuPokemon, {.u8_void = StartMenuPokemonCallback} },
-    [STARTMENU_BAG]     = { gText_MenuBag,     {.u8_void = StartMenuBagCallback} },
-    [STARTMENU_PLAYER]  = { gText_MenuPlayer,  {.u8_void = StartMenuPlayerCallback} },
-    [STARTMENU_SAVE]    = { gText_MenuSave,    {.u8_void = StartMenuSaveCallback} },
-    [STARTMENU_OPTION]  = { gText_MenuOption,  {.u8_void = StartMenuOptionCallback} },
-    [STARTMENU_EXIT]    = { gText_MenuExit,    {.u8_void = StartMenuExitCallback} },
-    [STARTMENU_RETIRE]  = { gText_MenuRetire,  {.u8_void = StartMenuSafariZoneRetireCallback} },
-    [STARTMENU_PLAYER2] = { gText_MenuPlayer,  {.u8_void = StartMenuLinkPlayerCallback} }
+    [STARTMENU_POKEDEX] = { sDMVAppDex, {.u8_void = StartMenuPokedexCallback} },
+    [STARTMENU_POKEMON] = { sDMVAppTeam, {.u8_void = StartMenuPokemonCallback} },
+    [STARTMENU_BAG]     = { sDMVAppBag,     {.u8_void = StartMenuBagCallback} },
+    [STARTMENU_PLAYER]  = { sDMVAppTrainer,  {.u8_void = StartMenuPlayerCallback} },
+    [STARTMENU_SAVE]    = { sDMVAppSave,    {.u8_void = StartMenuSaveCallback} },
+    [STARTMENU_OPTION]  = { sDMVAppSettings,  {.u8_void = StartMenuOptionCallback} },
+    [STARTMENU_EXIT]    = { sDMVAppClose,    {.u8_void = StartMenuExitCallback} },
+    [STARTMENU_RETIRE]  = { sDMVAppRetire,  {.u8_void = StartMenuSafariZoneRetireCallback} },
+    [STARTMENU_PLAYER2] = { sDMVAppTrainer,  {.u8_void = StartMenuLinkPlayerCallback} }
 };
 
 static const struct WindowTemplate sSafariZoneStatsWindowTemplate = {
@@ -280,15 +292,10 @@ static s8 PrintStartMenuItems(s8 *cursor_p, u8 nitems)
     s16 i = *cursor_p;
     do
     {
-        if (sStartMenuOrder[i] == STARTMENU_PLAYER || sStartMenuOrder[i] == STARTMENU_PLAYER2)
-        {
-            Menu_PrintFormatIntlPlayerName(GetStartMenuWindowId(), sStartMenuActionTable[sStartMenuOrder[i]].text, 8, i * 15);
-        }
-        else
-        {
-            StringExpandPlaceholders(gStringVar4, sStartMenuActionTable[sStartMenuOrder[i]].text);
-            AddTextPrinterParameterized(GetStartMenuWindowId(), FONT_NORMAL, gStringVar4, 8, i * 15, 0xFF, NULL);
-        }
+        if (i == 0)
+            AddTextPrinterParameterized(GetStartMenuWindowId(), FONT_NORMAL, sDMVPhoneHeader, 8, 0, 0xFF, NULL);
+        StringExpandPlaceholders(gStringVar4, sStartMenuActionTable[sStartMenuOrder[i]].text);
+        AddTextPrinterParameterized(GetStartMenuWindowId(), FONT_NORMAL, gStringVar4, 8, (i + 1) * 15, 0xFF, NULL);
         i++;
         if (i >= sNumStartMenuItems)
         {
@@ -313,7 +320,7 @@ static s8 DoDrawStartMenu(void)
         break;
     case 2:
         LoadStdWindowFrameGfx();
-        DrawStdWindowFrame(CreateStartMenuWindow(sNumStartMenuItems), FALSE);
+        DrawStdWindowFrame(CreateStartMenuWindow(sNumStartMenuItems + 1), FALSE);
         sDrawStartMenuState[0]++;
         break;
     case 3:
@@ -326,7 +333,7 @@ static s8 DoDrawStartMenu(void)
             sDrawStartMenuState[0]++;
         break;
     case 5:
-        sStartMenuCursorPos = Menu_InitCursor(GetStartMenuWindowId(), FONT_NORMAL, 0, 0, 15, sNumStartMenuItems, sStartMenuCursorPos);
+        sStartMenuCursorPos = Menu_InitCursor(GetStartMenuWindowId(), FONT_NORMAL, 0, 16, 15, sNumStartMenuItems, sStartMenuCursorPos);
         if (!MenuHelpers_IsLinkActive() && InUnionRoom() != TRUE && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_HELP)
         {
             DrawHelpMessageWindowWithText(sStartMenuDescPointers[sStartMenuOrder[sStartMenuCursorPos]]);

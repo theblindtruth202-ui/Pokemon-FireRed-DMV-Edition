@@ -57,6 +57,10 @@ static void Task_PikachuIntro_LoadPage1(u8);
 static void Task_PikachuIntro_HandleInput(u8);
 static void Task_PikachuIntro_Clear(u8);
 
+
+static const u8 sDMVPlayerName[] = _("DAME");
+static const u8 sDMVRivalName[] = _("DJ");
+
 static void Task_OakSpeech_Init(u8);
 static void Task_OakSpeech_WelcomeToTheWorld(u8);
 static void Task_OakSpeech_ThisWorld(u8);
@@ -1267,7 +1271,6 @@ static void Task_OakSpeech_FadeOutOak(u8 taskId)
 static void Task_OakSpeech_AskPlayerGender(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-
     if (tTrainerPicFadeState != 0)
     {
         if (tTimer != 0)
@@ -1276,10 +1279,13 @@ static void Task_OakSpeech_AskPlayerGender(u8 taskId)
         }
         else
         {
+            gSaveBlock2Ptr->playerGender = MALE;
             tTrainerPicPosX = -60;
             ClearTrainerPic();
-            OakSpeechPrintMessage(gOakSpeech_Text_AskPlayerGender, sOakSpeechResources->textSpeed);
-            gTasks[taskId].func = Task_OakSpeech_ShowGenderOptions;
+            ClearDialogWindowAndFrame(WIN_INTRO_TEXTBOX, TRUE);
+            FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 30, 20);
+            CopyBgTilemapBufferToVram(0);
+            gTasks[taskId].func = Task_OakSpeech_LoadPlayerPic;
         }
     }
 }
@@ -1351,7 +1357,6 @@ static void Task_OakSpeech_LoadPlayerPic(u8 taskId)
 static void Task_OakSpeech_YourNameWhatIsIt(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-
     if (tTrainerPicFadeState != 0)
     {
         if (tTimer != 0)
@@ -1360,9 +1365,12 @@ static void Task_OakSpeech_YourNameWhatIsIt(u8 taskId)
         }
         else
         {
+            StringCopy(gSaveBlock2Ptr->playerName, sDMVPlayerName);
             tTrainerPicPosX = 0;
-            OakSpeechPrintMessage(gOakSpeech_Text_YourNameWhatIsIt, sOakSpeechResources->textSpeed);
-            gTasks[taskId].func = Task_OakSpeech_FadeOutForPlayerNamingScreen;
+            ClearDialogWindowAndFrame(WIN_INTRO_TEXTBOX, TRUE);
+            CreateFadeInTask(taskId, 2);
+            tTimer = 40;
+            gTasks[taskId].func = Task_OakSpeech_FadeOutPlayerPic;
         }
     }
 }
@@ -1556,12 +1564,13 @@ static void Task_OakSpeech_FadeInRivalPic(u8 taskId)
 static void Task_OakSpeech_AskRivalsName(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-
     if (tTrainerPicFadeState != 0)
     {
-        OakSpeechPrintMessage(gOakSpeech_Text_WhatWasHisName, sOakSpeechResources->textSpeed);
+        StringCopy(gSaveBlock1Ptr->rivalName, sDMVRivalName);
+        StringExpandPlaceholders(gStringVar4, gOakSpeech_Text_RememberRivalsName);
+        OakSpeechPrintMessage(gStringVar4, sOakSpeechResources->textSpeed);
         sOakSpeechResources->hasPlayerBeenNamed = TRUE;
-        gTasks[taskId].func = Task_OakSpeech_MoveRivalDisplayNameOptions;
+        gTasks[taskId].func = Task_OakSpeech_FadeOutRivalPic;
     }
 }
 
