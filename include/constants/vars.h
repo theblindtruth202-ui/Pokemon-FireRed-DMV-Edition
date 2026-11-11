@@ -307,6 +307,12 @@
 #define VAR_0x40FE                 0x40FE
 #define VAR_0x40FF                 0x40FF
 
+// DMV Edition: persistent randomized lab choices (reserved former unnamed vars).
+#define VAR_DMV_RIVAL_SPECIES         VAR_0x40FB
+#define VAR_DMV_STARTER_0            VAR_0x40FC
+#define VAR_DMV_STARTER_1            VAR_0x40FD
+#define VAR_DMV_STARTER_2            VAR_0x40FE
+
 #define VARS_END                   0x40FF
 #define VARS_COUNT                 (VARS_END - VARS_START + 1)
 

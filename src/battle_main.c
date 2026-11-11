@@ -13,6 +13,7 @@
 #include "data.h"
 #include "decompress.h"
 #include "event_data.h"
+#include "field_specials.h"
 #include "evolution_scene.h"
 #include "graphics.h"
 #include "help_system.h"
@@ -1628,6 +1629,26 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
                 }
                 break;
             }
+            }
+        }
+
+        // DMV Edition: DJ retains his randomly chosen starter through the
+        // early, late, and championship rival battle trainer parties.
+        if (gTrainers[trainerNum].trainerPic == TRAINER_PIC_RIVAL_EARLY
+         || gTrainers[trainerNum].trainerPic == TRAINER_PIC_RIVAL_LATE
+         || gTrainers[trainerNum].trainerPic == TRAINER_PIC_CHAMPION_RIVAL)
+        {
+            for (i = 0; i < gTrainers[trainerNum].partySize; i++)
+            {
+                u16 oldSpecies = GetMonData(&party[i], MON_DATA_SPECIES);
+                u16 newSpecies = DMVGetRivalPokemonSpecies(oldSpecies);
+                if (newSpecies != oldSpecies)
+                {
+                    u8 level = GetMonData(&party[i], MON_DATA_LEVEL);
+                    u16 heldItem = GetMonData(&party[i], MON_DATA_HELD_ITEM);
+                    CreateMon(&party[i], newSpecies, level, fixedIV, FALSE, 0, OT_ID_RANDOM_NO_SHINY, 0);
+                    SetMonData(&party[i], MON_DATA_HELD_ITEM, &heldItem);
+                }
             }
         }
 

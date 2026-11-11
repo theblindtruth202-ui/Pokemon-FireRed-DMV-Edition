@@ -35,6 +35,7 @@
 #include "new_menu_helpers.h"
 #include "constants/songs.h"
 #include "constants/items.h"
+#include "constants/species.h"
 #include "constants/maps.h"
 #include "constants/region_map_sections.h"
 #include "constants/moves.h"
@@ -1524,8 +1525,13 @@ static const u16 sStarterSpecies[] = {
 
 static u16 GetStarterSpeciesById(u16 idx)
 {
+    u16 species;
+
     if (idx >= NELEMS(sStarterSpecies))
         idx = 0;
+    species = VarGet(VAR_DMV_STARTER_0 + idx);
+    if (species != SPECIES_NONE)
+        return species;
     return sStarterSpecies[idx];
 }
 
@@ -1533,6 +1539,88 @@ u16 GetStarterSpecies(void)
 {
     return GetStarterSpeciesById(VarGet(VAR_STARTER_MON));
 }
+
+// Each line has a first stage, middle evolution, and final evolution.
+// The randomized lab uses complete three-stage lines, so DJ can evolve
+// his chosen starter consistently throughout the original rival battles.
+static const u16 sDMVEvolutionLines[][3] =
+{
+    {SPECIES_BULBASAUR,  SPECIES_IVYSAUR,     SPECIES_VENUSAUR},
+    {SPECIES_CHIKORITA,  SPECIES_BAYLEEF,     SPECIES_MEGANIUM},
+    {SPECIES_TREECKO,    SPECIES_GROVYLE,     SPECIES_SCEPTILE},
+    {SPECIES_CHARMANDER, SPECIES_CHARMELEON,  SPECIES_CHARIZARD},
+    {SPECIES_CYNDAQUIL,  SPECIES_QUILAVA,     SPECIES_TYPHLOSION},
+    {SPECIES_TORCHIC,    SPECIES_COMBUSKEN,   SPECIES_BLAZIKEN},
+    {SPECIES_SQUIRTLE,   SPECIES_WARTORTLE,   SPECIES_BLASTOISE},
+    {SPECIES_TOTODILE,   SPECIES_CROCONAW,    SPECIES_FERALIGATR},
+    {SPECIES_MUDKIP,     SPECIES_MARSHTOMP,   SPECIES_SWAMPERT},
+};
+
+// One random Grass, Fire, and Water starter per New Game, shuffled into
+// the three lab ball positions. All are first-stage, non-legendary.
+void DMVGenerateStarterChoices(void)
+{
+    u16 picks[3];
+    u16 temp;
+    s32 i;
+    s32 j;
+
+    if (VarGet(VAR_DMV_STARTER_0) != SPECIES_NONE)
+        return;
+
+    picks[0] = sDMVEvolutionLines[Random() % 3][0];
+    picks[1] = sDMVEvolutionLines[3 + Random() % 3][0];
+    picks[2] = sDMVEvolutionLines[6 + Random() % 3][0];
+
+    for (i = 2; i > 0; i--)
+    {
+        j = Random() % (i + 1);
+        temp = picks[i];
+        picks[i] = picks[j];
+        picks[j] = temp;
+    }
+
+    VarSet(VAR_DMV_STARTER_0, picks[0]);
+    VarSet(VAR_DMV_STARTER_1, picks[1]);
+    VarSet(VAR_DMV_STARTER_2, picks[2]);
+}
+
+// Replaces only DJ's normal starter line (not his other Pokémon).
+// His first battle uses stage 0, later battles stage 1/2 as in FireRed.
+u16 DMVGetRivalPokemonSpecies(u16 originalSpecies)
+{
+    static const u16 sKantoOriginalLines[][3] =
+    {
+        {SPECIES_BULBASAUR, SPECIES_IVYSAUR, SPECIES_VENUSAUR},
+        {SPECIES_CHARMANDER, SPECIES_CHARMELEON, SPECIES_CHARIZARD},
+        {SPECIES_SQUIRTLE, SPECIES_WARTORTLE, SPECIES_BLASTOISE},
+    };
+    u16 rivalSpecies = VarGet(VAR_DMV_RIVAL_SPECIES);
+    s32 line;
+    s32 stage;
+    s32 rivalLine;
+
+    if (rivalSpecies == SPECIES_NONE)
+        return originalSpecies;
+
+    for (rivalLine = 0; rivalLine < NELEMS(sDMVEvolutionLines); rivalLine++)
+    {
+        if (sDMVEvolutionLines[rivalLine][0] == rivalSpecies)
+        {
+            for (line = 0; line < NELEMS(sKantoOriginalLines); line++)
+            {
+                for (stage = 0; stage < 3; stage++)
+                {
+                    if (sKantoOriginalLines[line][stage] == originalSpecies)
+                        return sDMVEvolutionLines[rivalLine][stage];
+                }
+            }
+            break;
+        }
+    }
+    return originalSpecies;
+}
+
 
 void SetSeenMon(void)
 {
