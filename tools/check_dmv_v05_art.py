@@ -19,6 +19,12 @@ FILES = {
 "graphics/dmv/portraits/dame_win.png": (64,64),
 "graphics/dmv/portraits/dj_win.png": (64,64),
 "graphics/object_events/pics/people/blue.png": (144,32),
+"graphics/object_events/pics/people/red_bike.png": (288,32),
+"graphics/object_events/pics/people/red_surf.png": (288,32),
+"graphics/object_events/pics/people/red_surf_run.png": (224,32),
+"graphics/object_events/pics/people/red_fish.png": (384,32),
+"graphics/object_events/pics/people/red_item.png": (144,32),
+"graphics/object_events/pics/people/red_vs_seeker_bike.png": (192,32),
 }
 failures=0
 for name,expected in FILES.items():
