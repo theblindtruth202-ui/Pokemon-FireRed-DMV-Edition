@@ -45,8 +45,31 @@ for name,expected in FILES.items():
         assert (w,h)==expected, f"wrong dimensions {(w,h)}"
         assert color_type==3, "must be an indexed palette PNG"
         assert len(chunks[b"PLTE"])<=768, "invalid palette length"
-        assert len(chunks[b"PLTE"])//3<=16, "too many colors for 4bpp"
-        zlib.decompress(b"".join(idats))
+        palette = chunks[b"PLTE"]
+        pixels = zlib.decompress(b"".join(idats))
+        if name.startswith("graphics/oak_speech/"):
+            # 8bpp Oak portraits use BG palette BANK 4 (Dame) and 6 (DJ).
+            # Pixels must contain the absolute GBA palette indices, not 1..15.
+            assert bit_depth == 8, "Oak intro must be indexed 8bpp"
+            slot = 64 if "/red/" in name else 96
+            assert len(palette) // 3 >= slot + 16, "palette does not contain intro slot"
+            used = set()
+            assert len(pixels) == h * (w + 1), "unexpected intro pixel data"
+            for row in range(h):
+                start = row * (w + 1)
+                assert pixels[start] == 0, "expected unfiltered indexed intro image"
+                used.update(pixels[start + 1:start + 1 + w])
+            assert all(c == 0 or slot <= c < slot + 16 for c in used), (
+                f"Oak sprite uses wrong BG palette index: {sorted(used)}")
+            pal_path = ROOT / name.replace("/pic.png", "/pal.pal")
+            lines = pal_path.read_text().splitlines()
+            expected_pal = [tuple(map(int, line.split())) for line in lines[3:19]]
+            assert len(expected_pal) == 16, "Oak JASC palette missing first 16 colors"
+            for i, rgb in enumerate(expected_pal):
+                actual_rgb = tuple(palette[(slot+i)*3:(slot+i+1)*3])
+                assert actual_rgb == rgb, f"Oak palette mismatch at color {i}: {actual_rgb} vs {rgb}"
+        else:
+            assert len(palette)//3<=16, "too many colors for 4bpp"
         print("OK  ",name, f"{w}x{h}")
     except Exception as exc:
         failures+=1
