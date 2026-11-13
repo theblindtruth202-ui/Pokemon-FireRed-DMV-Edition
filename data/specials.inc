@@ -453,4 +453,8 @@ gSpecials::
 	def_special LoopWingFlapSound
 	def_special CreateEnemyEventMon
 	def_special DMVGenerateStarterChoices
+	def_special DMVShowFaceDJ
+	def_special DMVShowFaceDame
+	def_special DMVShowFaceDJPostBattle
+	def_special DMVHideFace
 gSpecialsEnd::

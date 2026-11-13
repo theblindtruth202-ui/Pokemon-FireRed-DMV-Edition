@@ -213,15 +213,19 @@ PalletTown_ProfessorOaksLab_ChooseStarterScene::
 	clearflag FLAG_DONT_TRANSITION_MUSIC
 	savebgm MUS_DUMMY
 	fadedefaultbgm
+	special DMVShowFaceDJ
 	msgbox PalletTown_ProfessorOaksLab_Text_RivalFedUpWithWaiting
 	closemessage
+	special DMVHideFace
 	delay 60
 	msgbox PalletTown_ProfessorOaksLab_Text_OakThreeMonsChooseOne
 	closemessage
 	delay 30
 	applymovement LOCALID_OAKS_LAB_RIVAL, PalletTown_ProfessorOaksLab_Movement_RivalReact
 	waitmovement 0
+	special DMVShowFaceDJ
 	msgbox PalletTown_ProfessorOaksLab_Text_RivalNoFairWhatAboutMe
+	special DMVHideFace
 	msgbox PalletTown_ProfessorOaksLab_Text_OakBePatientRival
 	setvar VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB, 2
 	releaseall
@@ -293,8 +297,13 @@ PalletTown_ProfessorOaksLab_EventScript_RivalBattle::
 	waitmovement 0
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
+	special DMVShowFaceDJ
 	msgbox PalletTown_ProfessorOaksLab_Text_RivalLetsCheckOutMons
 	closemessage
+	special DMVHideFace
+	special DMVShowFaceDame
+	delay 36
+	special DMVHideFace
 	applymovement LOCALID_OAKS_LAB_PROF_OAK, Common_Movement_FaceDown
 	waitmovement 0
 	goto_if_eq VAR_STARTER_MON, 0, PalletTown_ProfessorOaksLab_EventScript_RivalApproachForBattleCharmander
@@ -467,8 +476,10 @@ PalletTown_ProfessorOaksLab_Movement_RivalApproachForBattleBulbasaurRight::
 
 PalletTown_ProfessorOaksLab_EventScript_EndRivalBattle::
 	special HealPlayerParty
+	special DMVShowFaceDJPostBattle
 	msgbox PalletTown_ProfessorOaksLab_Text_RivalGoToughenMyMon
 	closemessage
+	special DMVHideFace
 	playbgm MUS_RIVAL_EXIT, 0
 	call_if_eq VAR_TEMP_2, 1, PalletTown_ProfessorOaksLab_EventScript_RivalExitAfterBattleLeft
 	call_if_eq VAR_TEMP_2, 2, PalletTown_ProfessorOaksLab_EventScript_RivalExitAfterBattleMid

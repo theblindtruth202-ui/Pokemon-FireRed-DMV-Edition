@@ -33,6 +33,8 @@
 #include "party_menu.h"
 #include "dynamic_placeholder_text_util.h"
 #include "new_menu_helpers.h"
+#include "trainer_pokemon_sprites.h"
+#include "constants/trainers.h"
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "constants/species.h"
@@ -2640,4 +2642,57 @@ static void Task_WingFlapSound(u8 taskId)
     }
     if (data[0] == gSpecialVar_0x8004 - 1)
         DestroyTask(taskId);
+}
+
+// DMV v0.5: show the real 64x64 trainer portrait beside selected field dialogue.
+// Reuse battle's trainer graphics (not an enlarged 16x32 walking sprite).
+// Palette slot is restored as soon as the scripted dialogue ends.
+#define DMV_FACE_PAL_SLOT 15
+
+static EWRAM_DATA u16 sDmvFaceOldPalette[16];
+static EWRAM_DATA u8 sDmvFaceSprite;
+static EWRAM_DATA bool8 sDmvFaceActive;
+
+void DMVHideFace(void)
+{
+    if (sDmvFaceActive)
+    {
+        FreeAndDestroyTrainerPicSprite(sDmvFaceSprite);
+        LoadPalette(sDmvFaceOldPalette, OBJ_PLTT_ID(DMV_FACE_PAL_SLOT), PLTT_SIZE_4BPP);
+        sDmvFaceActive = FALSE;
+    }
+}
+
+static void DMVShowTrainerFace(u16 trainerPic)
+{
+    u16 spriteId;
+    u8 i;
+    DMVHideFace();
+    for (i = 0; i < 16; i++)
+        sDmvFaceOldPalette[i] = gPlttBufferUnfaded[OBJ_PLTT_ID(DMV_FACE_PAL_SLOT) + i];
+
+    spriteId = CreateTrainerPicSprite(trainerPic, TRUE, 196, 69, DMV_FACE_PAL_SLOT, TAG_NONE);
+    if (spriteId >= MAX_SPRITES)
+    {
+        LoadPalette(sDmvFaceOldPalette, OBJ_PLTT_ID(DMV_FACE_PAL_SLOT), PLTT_SIZE_4BPP);
+        return;
+    }
+    sDmvFaceSprite = spriteId;
+    sDmvFaceActive = TRUE;
+    gSprites[spriteId].oam.priority = 0;
+}
+
+void DMVShowFaceDJ(void)
+{
+    DMVShowTrainerFace(TRAINER_PIC_RIVAL_EARLY);
+}
+
+void DMVShowFaceDame(void)
+{
+    DMVShowTrainerFace(TRAINER_PIC_RED);
+}
+
+void DMVShowFaceDJPostBattle(void)
+{
+    DMVShowTrainerFace(TRAINER_PIC_CHAMPION_RIVAL);
 }
