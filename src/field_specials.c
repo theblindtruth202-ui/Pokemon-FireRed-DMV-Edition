@@ -36,6 +36,7 @@
 #include "trainer_pokemon_sprites.h"
 #include "constants/trainers.h"
 #include "constants/songs.h"
+#include "constants/battle.h"
 #include "constants/items.h"
 #include "constants/species.h"
 #include "constants/maps.h"
@@ -2694,5 +2695,10 @@ void DMVShowFaceDame(void)
 
 void DMVShowFaceDJPostBattle(void)
 {
-    DMVShowTrainerFace(TRAINER_PIC_CHAMPION_RIVAL);
+    // The tutorial rival battle may end with either side winning.
+    // Show Dame Floss's victory pose when the player wins; DJ otherwise.
+    if (gBattleOutcome == B_OUTCOME_WON)
+        DMVShowTrainerFace(TRAINER_PIC_RED);
+    else
+        DMVShowTrainerFace(TRAINER_PIC_CHAMPION_RIVAL);
 }
