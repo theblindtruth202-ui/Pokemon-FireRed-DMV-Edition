@@ -1,27 +1,37 @@
-# DMV v0.5 character artwork — development audit
+# DMV v0.5 — Character artwork batch
 
-## Goal
-Combine multiple visual fixes into one Xbox test ROM. Do not build a ROM for one sprite change.
+This branch is the v0.5 artwork workstream, not an approved release.
 
-## Source artwork ready on this branch
-- DJ's 16x32 overworld animation: `graphics/object_events/pics/people/blue.png` — silhouette-preserving draft from v0.4d; not yet Xbox approved.
-- Dame Floss's existing overworld art: `graphics/object_events/pics/people/red_normal.png` — unchanged, retest.
-- DJ's existing battle portraits: `graphics/trainers/front_pics/rival_early_front_pic.png`, `rival_late_front_pic.png`, and `champion_rival_front_pic.png` — unchanged, retest.
-- Dame Floss's existing trainer front and back art: `graphics/trainers/front_pics/red_front_pic.png`, `graphics/trainers/back_pics/red_back_pic.png` — unchanged, retest.
-- Opening introduction full-body portraits: `graphics/oak_speech/red/pic.png` and `graphics/oak_speech/rival/pic.png` — new 64x96 art based on existing trainer artwork; matching 32-color palettes changed; not yet Xbox tested.
+## Replaced in source
+- Dame Floss full-size 64x64 trainer front portrait and 64x320 five-frame back battle art.
+- DJ early, late, and champion 64x64 battle trainer portraits, each with separate poses.
+- Dame Floss and DJ 64x96 Oak opening portraits.
+- Matching indexed image palettes for these seven graphics resources.
+- DJ overworld silhouette from the v0.4d draft; overworld revisions not yet confirmed on Xbox.
 
-## Remaining artwork tasks
-- Implement in-dialogue face-to-face portraits for selected important conversations (requires new UI/code, not just PNG replacement).
-- Audit movement variants, trainer card, and celebration/victory art; only count a feature completed if gameplay confirms it.
-- Do not enlarge walking sprites for full-size trainer art.
+## Prepared, not yet connected to game events
+- `graphics/dmv/portraits/dame_talk.png`
+- `graphics/dmv/portraits/dj_talk.png`
+- `graphics/dmv/portraits/dame_win.png`
+- `graphics/dmv/portraits/dj_win.png`
 
-## One-ROM Xbox verification
-1. DJ's front/back/side walking poses and distortion regression.
-2. Dame Floss's overworld and movement animation.
-3. Player and rival battle-introduction full-size portraits.
-4. Oak's opening character portraits.
-5. Battle-ending presentation/celebration and any newly implemented dialogue portraits.
-6. Starter randomizer, rival battle, and save/load regression.
+**The portrait images alone do not make dialogue or victory overlays work.**
+A proper code/UI integration and in-game testing are required before these can be called complete.
 
-## Safety
-Previous ROMs remain separate. Never use a failed or untested artwork version as the production baseline. Name the next combined test ROM `DMV-v05.gba`.
+## v0.5 build policy
+No ROM rebuild after every image. Compile `DMV-v05.gba` only after changes are ready for the combined test.
+Do not overwrite the previous working test builds.
+
+## Planned tests
+1. DJ overworld walking poses, front/back/left/right.
+2. Dame Floss walking, biking, running and common animation variants.
+3. DJ early, late and champion battle poses.
+4. Dame Floss front battle pic and five-frame back throw animation.
+5. Both 64x96 Oak opening portraits.
+6. Dialogue and win portrait behavior **only after integrated in code**.
+7. Existing starter randomizer and rival Pokémon selection.
+8. Saving and loading.
+9. No palette, alignment, or transparency glitches.
+
+## Automated validation
+Run `python3 tools/check_dmv_v05_art.py` in Codespaces to check PNG structure, dimensions, palettes and transparency.
